@@ -1,0 +1,42 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    # 每天北京时间早上8点自动同步 (UTC 0点)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 支持手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: github.repository != '521xueweihan/GitHub520' # 防止在上游仓库运行
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 添加上游仓库
+          git remote add upstream https://github.com/521xueweihan/GitHub520.git || true
+
+          # 获取上游更新
+          git fetch upstream
+
+          # 合并上游代码（允许不相关历史）
+          git merge upstream/main --allow-unrelated-histories --no-edit || {
+            echo "Merge conflict detected, force syncing..."
+            git reset --hard upstream/main
+          }
+
+          # 推送到fork
+          git push origin main
+
+          echo "✅ Sync completed successfully!"

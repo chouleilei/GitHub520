@@ -31,13 +31,13 @@ jobs:
           git fetch upstream
 
           # 合并上游代码（允许不相关历史）；冲突以上游版本为准
-          if git merge upstream/main --allow-unrelated-histories --no-edit -X theirs; then
-            # 推送到fork
-            git push origin main
-          else
-            echo "Merge failed, force syncing..."
-            git reset --hard upstream/main
-            git push --force-with-lease origin main
+          if ! git merge upstream/main --allow-unrelated-histories --no-edit -X theirs; then
+            git merge --abort || true
+            echo "::error::Failed to merge upstream/main; aborting without changing remote."
+            exit 1
           fi
+
+          # 推送到fork
+          git push origin main
 
           echo "✅ Sync completed successfully!"

@@ -6,6 +6,13 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch: # 支持手动触发
 
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -28,13 +35,20 @@ jobs:
           git remote add upstream https://github.com/521xueweihan/GitHub520.git || true
 
           # 获取上游更新
-          git fetch upstream
+          git fetch upstream --prune
 
-          # 合并上游代码（允许不相关历史）；冲突以上游版本为准
+          # 合并上游历史；内容冲突以上游为准
           if ! git merge upstream/main --allow-unrelated-histories --no-edit -X theirs; then
             git merge --abort || true
             echo "::error::Failed to merge upstream/main; aborting without changing remote."
             exit 1
+          fi
+
+          # 上游存在的文件全部对齐到上游，保留本仓库的同步工作流
+          git checkout upstream/main -- . ':(exclude).github/workflows/sync-upstream.yml'
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: align tracked files with upstream"
           fi
 
           # 推送到fork

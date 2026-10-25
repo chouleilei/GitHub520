@@ -30,13 +30,14 @@ jobs:
           # 获取上游更新
           git fetch upstream
 
-          # 合并上游代码（允许不相关历史）
-          git merge upstream/main --allow-unrelated-histories --no-edit || {
-            echo "Merge conflict detected, force syncing..."
+          # 合并上游代码（允许不相关历史）；冲突以上游版本为准
+          if git merge upstream/main --allow-unrelated-histories --no-edit -X theirs; then
+            # 推送到fork
+            git push origin main
+          else
+            echo "Merge failed, force syncing..."
             git reset --hard upstream/main
-          }
-
-          # 推送到fork
-          git push origin main
+            git push --force-with-lease origin main
+          fi
 
           echo "✅ Sync completed successfully!"

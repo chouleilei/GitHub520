@@ -5,7 +5,7 @@
 😘 让你“爱”上 GitHub，解决访问时图裂、加载慢的问题。
 </p>
 
-> 💰服务器将于 2025-12-31 到期，续费需要 831 元/年 [点击扫码赞助](https://raw.hellogithub.com/code.png)，感谢🙏
+> 💰服务器将于 2026-12-31 到期，续费需要 831 元/年 [点击扫码赞助](https://raw.hellogithub.com/code.png)，感谢🙏
 
 ## 一、介绍
 对 GitHub 说"爱"太难了：访问慢、图片加载不出来。
@@ -78,14 +78,14 @@
 185.199.108.133               private-user-images.githubusercontent.com
 
 
-# Update time: 2026-10-25T07:59:35+08:00
+# Update time: 2026-10-25T08:44:08+08:00
 # Update url: https://raw.hellogithub.com/hosts
 # Star me: https://github.com/521xueweihan/GitHub520
 # GitHub520 Host End
 
 ```
 
-该内容会自动定时更新， 数据更新时间：2026-10-25T07:59:35+08:00
+该内容会自动定时更新， 数据更新时间：2026-10-25T08:44:08+08:00
 
 #### 2.1.2 修改 hosts 文件
 
